@@ -1,4 +1,4 @@
-package com.example.demo.impl;
+package com.example.demo.service.impl;
 
 import com.example.demo.dto.request.ProductRequest;
 import com.example.demo.dto.response.ResponseResponse;
@@ -6,6 +6,7 @@ import com.example.demo.exception.ProductException;
 import com.example.demo.model.Product;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.ProductService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

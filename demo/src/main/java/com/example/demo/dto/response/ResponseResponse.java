@@ -3,7 +3,8 @@ package com.example.demo.dto.response;
 import lombok.Data;
 
 @Data
-public class ResponseResponse {private Long productId;
+public class ResponseResponse {
+    private Long productId;
     private String productName;
     private Double price;
     private String color;
