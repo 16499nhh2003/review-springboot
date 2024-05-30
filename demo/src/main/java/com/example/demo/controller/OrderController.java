@@ -3,7 +3,9 @@ package com.example.demo.controller;
 import com.example.demo.exception.CartException;
 import com.example.demo.exception.CustomerException;
 import com.example.demo.exception.OrderException;
+import com.example.demo.exception.ProductException;
 import com.example.demo.model.Orders;
+import com.example.demo.service.CartService;
 import com.example.demo.service.OrderService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -20,12 +22,13 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class OrderController {
 
-    private OrderService oService;
+    OrderService oService;
 
     @PostMapping("/add")
     public ResponseEntity<Orders> addOrder(@RequestParam("customerId") Integer customerId)
-            throws OrderException, CustomerException, CartException {
-        return new ResponseEntity<Orders>(oService.addOrder(customerId), HttpStatus.CREATED);
+            throws OrderException, CustomerException, CartException, ProductException {
+        return new ResponseEntity<Orders>( oService.addOrder(customerId), HttpStatus.CREATED);
+
     }
 
     @PutMapping("/update")
@@ -43,9 +46,9 @@ public class OrderController {
         return new ResponseEntity<List<Orders>>(oService.viewAllOrder(), HttpStatus.OK);
     }
 
-    @GetMapping("/view/{userId}")
-    public ResponseEntity<List<Orders>> viewOrderByUserId(@PathVariable("userId") Integer userId)
-            throws OrderException {
-        return new ResponseEntity<List<Orders>>(oService.viewAllOrdersByUserId(userId), HttpStatus.OK);
-    }
+//    @GetMapping("/view/{userId}")
+//    public ResponseEntity<List<Orders>> viewOrderByUserId(@PathVariable("userId") Integer userId)
+//            throws OrderException {
+//        return new ResponseEntity<List<Orders>>(oService.viewAllOrdersByUserId(userId), HttpStatus.OK);
+//    }
 }

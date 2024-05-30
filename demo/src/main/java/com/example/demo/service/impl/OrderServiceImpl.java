@@ -33,41 +33,53 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Orders addOrder(Integer cid) throws OrderException, CustomerException, CartException {
-        Optional<Customer> opt = customerRepo.findById(cid);
-        if (opt.isEmpty()) {
-            throw new CustomerException("Customer not found");
+        try {
+            Optional<Customer> opt = customerRepo.findById(cid);
+            if (opt.isEmpty()) {
+                throw new CustomerException("Customer not found");
+            }
+            Customer c = opt.get();
+            Cart cart = c.getCart();
+            if (cart == null)
+                throw new CartException("Cart empty");
+
+            List<CartItem> cartItems = this.cartItemRepo.findAllByCart(cart);
+
+            // persist data
+            Orders o = new Orders();
+            o.setDate(LocalDateTime.now());
+            o.setOrderStatus("Pending");
+            o.setAddress(c.getAddress());
+            o.setCustomer(c);
+            Orders savedOrder = oRepo.save(o);
+
+
+            List<OrderProduct> orderProducts = new ArrayList<>();
+            for (CartItem cartItem : cartItems) {
+                OrderProduct orderProduct = new OrderProduct();
+                OrderProductKey orderProductKey = new OrderProductKey();
+                orderProductKey.setOrderId(savedOrder.getOrderId());
+                orderProductKey.setProductId(cartItem.getProduct().getProductId());
+                orderProduct.setProduct(cartItem.getProduct());
+                orderProduct.setId(orderProductKey);
+                orderProduct.setOrder(savedOrder);
+                orderProduct.setQuantity(cartItem.getQuantity());
+                orderProducts.add(orderProduct);
+            }
+
+            savedOrder.setOrderProducts(orderProducts);
+//            this.oRepo.save(savedOrder);
+
+
+            // delete cartItem
+            System.err.println(cart.getCartId());
+            this.cartItemRepo.deleteAllByCart(cart.getCartId());
+
+
+            return savedOrder;
+        } catch (Exception e) {
+            return null;
         }
-        Customer c = opt.get();
-        Cart cart = c.getCart();
-        if (cart == null)
-            throw new CartException("Cart empty");
-
-        List<CartItem> cartItems = this.cartItemRepo.findAllByCart(cart);
-
-        // persist data
-        Orders o = new Orders();
-        o.setDate(LocalDateTime.now());
-        o.setOrderStatus("Pending");
-        o.setAddress(c.getAddress());
-        o.setCustomer(c);
-        Orders savedOrder = oRepo.save(o);
-
-
-        List<OrderProduct> orderProducts = new ArrayList<>();
-        for (CartItem cartItem : cartItems) {
-            OrderProduct orderProduct = new OrderProduct();
-            OrderProductKey orderProductKey = new OrderProductKey();
-            orderProductKey.setOrderId(savedOrder.getOrderId());
-            orderProductKey.setProductId(cartItem.getProduct().getProductId());
-            orderProduct.setProduct(cartItem.getProduct());
-            orderProduct.setId(orderProductKey);
-            orderProduct.setOrder(savedOrder);
-            orderProduct.setQuantity(cartItem.getQuantity());
-            orderProducts.add(orderProduct);
-        }
-        savedOrder.setOrderProducts(orderProducts);
-        this.oRepo.save(savedOrder);
-        return savedOrder;
     }
 
     @Override
@@ -77,11 +89,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Orders viewOrder(Integer orderId) throws OrderException {
-        return null;
+        Optional<Orders> orders = this.oRepo.findById(orderId);
+
+        if (orders.isEmpty())
+            throw new OrderException("khong thay don hang");
+
+        return orders.get();
     }
 
     @Override
     public List<Orders> viewAllOrder() throws OrderException {
+
         return null;
     }
 

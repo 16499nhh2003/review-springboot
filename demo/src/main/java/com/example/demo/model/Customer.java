@@ -24,13 +24,15 @@ public class Customer {
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     private Address address;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnore
     private Cart cart;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
-    @ToString.Exclude
+    @JsonIgnore
     private Set<Orders> orders = new HashSet<Orders>();
 
 

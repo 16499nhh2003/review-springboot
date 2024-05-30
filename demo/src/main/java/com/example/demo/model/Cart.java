@@ -13,7 +13,6 @@ import java.util.Set;
 
 @Data
 @Entity
-@ToString
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,16 +27,13 @@ public class Cart {
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     @JsonIgnore
-    @ToString.Exclude
     private List<Product> products = new ArrayList<Product>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "cart")
-    @ToString.Exclude
+    @JsonIgnore
     private Set<CartItem> cartProducts = new HashSet<CartItem>();
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @ToString.Exclude
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Customer customer;
 
 

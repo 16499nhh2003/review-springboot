@@ -198,4 +198,17 @@ public class CartServiceImpl implements CartService {
 //		return cart;
         return null;
     }
+
+    @Override
+    public void clearGioHang(Integer khachHangID) throws CartException, CustomerException, ProductException {
+
+        Optional<Customer> customer = this.crRepo.findById(khachHangID);
+        if (customer.isEmpty())
+            throw new CustomerException("khong thay khach hang");
+        Customer khachhangOk = customer.get();
+
+//        this.cartRepo.delete(khachhangOk.getCart());
+
+    }
+
 }

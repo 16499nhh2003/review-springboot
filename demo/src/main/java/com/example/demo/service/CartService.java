@@ -23,4 +23,6 @@ public interface CartService {
     public Cart decreaseProductQuantity(Integer customerId, Long productId)
             throws CartException, CustomerException, ProductException;
 
+    public void clearGioHang(Integer khachHangID) throws CartException, CustomerException, ProductException;
+
 }

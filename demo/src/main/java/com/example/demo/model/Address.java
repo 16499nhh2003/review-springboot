@@ -10,7 +10,6 @@ import lombok.ToString;
 
 @Data
 @Entity
-@ToString
 public class Address {
     @Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -13,7 +13,6 @@ import java.util.Set;
 
 @Data
 @Entity
-@ToString
 public class Orders {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,15 +21,12 @@ public class Orders {
     private String orderStatus;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
     private Customer customer;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JsonIgnore
     private Address address;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true , fetch =  FetchType.LAZY)
     private List<OrderProduct> orderProducts;
 
 }

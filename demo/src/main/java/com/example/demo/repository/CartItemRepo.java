@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Repository
 public interface CartItemRepo extends JpaRepository<CartItem, Integer> {
@@ -27,4 +26,9 @@ public interface CartItemRepo extends JpaRepository<CartItem, Integer> {
     Optional<CartItem> findByCartIdAndProductId(@Param("cartId") Integer cartId, @Param("productId") Long productId);
 
     List<CartItem> findAllByCart(Cart cart);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM CartItem ci WHERE ci.cart.cartId = :cartId")
+    void deleteAllByCart(@Param("cartId") Integer cartId);
 }
